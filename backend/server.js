@@ -1,5 +1,12 @@
 const express = require("express");
+const mongoose = require("mongoose")
 const app = express();
+
+mongoose.connect("mongodb+srv://byishimocedrick:king@users.cicbbds.mongodb.net/")
+.then(response=>{
+    console.log("Connected")
+})
+.catch(err=>console.log(err))
 
 app.use(express.json());
 
