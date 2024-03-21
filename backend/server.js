@@ -42,9 +42,22 @@ app.post("/users", async (req, res) => {
   }
 });
 
-app.get("/users/:id", (req, res) => {
+app.get("/users/:id", async (req, res) => {
   let id = req.params.id;
-  res.json({ id: id });
+  try{
+    const user = await Users.findById(id)
+    if(!user){
+        res.send("User not found")
+    }
+    res.json({
+        name: user.name,
+        email: user.email
+    })
+  }
+  catch(err){
+    console.log(err)
+  }
+  
 });
 
 app.listen(5000);
