@@ -15,12 +15,12 @@ app.use(express.json());
 
 app.get("/users", (req, res) => {
   Users.find()
-  .then(response=>{
-    res.send(response)
-  })
-  .catch(error => {
-    console.log(error);
-  })
+    .then((response) => {
+      res.send(response);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
 });
 
 app.post("/users", async (req, res) => {
@@ -30,13 +30,14 @@ app.post("/users", async (req, res) => {
       email: req.body.email,
       password: req.body.password,
     });
-    user.save()
-    .then(response=>{
+    user
+      .save()
+      .then((response) => {
         res.status(201).send(user);
-    })
-    .catch(err=>{
+      })
+      .catch((err) => {
         console.log(err);
-    })
+      });
   } catch (err) {
     console.log(err);
   }
@@ -44,20 +45,36 @@ app.post("/users", async (req, res) => {
 
 app.get("/users/:id", async (req, res) => {
   let id = req.params.id;
-  try{
-    const user = await Users.findById(id)
-    if(!user){
-        res.send("User not found")
+  try {
+    const user = await Users.findById(id);
+    if (!user) {
+      res.send("User not found");
     }
     res.json({
-        name: user.name,
-        email: user.email
+      name: user.name,
+      email: user.email,
+    });
+  } catch (err) {
+    console.log(err);
+  }
+});
+
+app.delete("/users/:id", (req, res) => {
+  Users.deleteOne({ _id: req.params.id })
+    .then((response) => {
+      res.json({ message: "success" });
     })
-  }
-  catch(err){
-    console.log(err)
-  }
-  
+    .catch((err) => {
+      console.log(err);
+    });
+});
+
+app.patch("/users/:id", (req, res) => {
+  Users.findByIdAndUpdate(req.params.id, { name: req.body.name },{new:true})
+    .then((result) => {
+      res.json(result);
+    })
+    .catch((err) => console.log(err));
 });
 
 app.listen(5000);
